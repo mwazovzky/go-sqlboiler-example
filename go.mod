@@ -3,6 +3,7 @@ module go-sqlboiler
 go 1.21.0
 
 require (
+	github.com/bxcodec/faker/v3 v3.8.1
 	github.com/friendsofgo/errors v0.9.2
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/volatiletech/null/v8 v8.1.2
