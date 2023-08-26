@@ -1,0 +1,12 @@
+output   = "models"
+wipe     = true
+no-tests = true
+add-enum-types = true
+
+[mysql]
+  dbname  = "go_sqlboiler"
+  host    = "localhost"
+  port    = 3306
+  user    = "user"
+  pass    = "usersecret"
+  sslmode = "false"
