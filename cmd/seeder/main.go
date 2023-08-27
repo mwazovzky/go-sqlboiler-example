@@ -8,6 +8,7 @@ import (
 	"go-sqlboiler/services/database"
 	"log"
 	"math/rand"
+	"time"
 
 	"github.com/bxcodec/faker/v3"
 	"github.com/volatiletech/null/v8"
@@ -66,6 +67,7 @@ func seedTransactions(ctx context.Context, db *sql.DB, client *models.Client, cu
 func createTransaction(ctx context.Context, db *sql.DB, client uint, currency uint, chain string) error {
 	types := []string{"deposit", "withdrawal"}
 	statuses := []string{"created", "confirmed", "cancelled"}
+	tm := getRandomTime()
 
 	ftx := FakeTransaction{}
 	err := faker.FakeData(&ftx)
@@ -82,6 +84,7 @@ func createTransaction(ctx context.Context, db *sql.DB, client uint, currency ui
 		Txid:       ftx.Txid,
 		Vout:       null.UintFrom(ftx.Vout),
 		Amount:     ftx.Amount * 10000,
+		CreatedAt:  null.TimeFrom(tm),
 	}
 
 	return tx.Insert(ctx, db, boil.Infer())
@@ -95,4 +98,13 @@ func deleteTransactions(ctx context.Context, db *sql.DB) error {
 func getRandomArrayItem(items []string) string {
 	index := rand.Intn(len(items))
 	return items[index]
+}
+
+func getRandomTime() time.Time {
+	interval := time.Duration(-14400 * time.Minute)
+	from := time.Now().Add(interval).Unix()
+	to := time.Now().Unix()
+	d := rand.Int63n(to - from)
+
+	return time.Unix(from+d, 0)
 }
